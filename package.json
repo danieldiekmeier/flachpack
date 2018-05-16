@@ -1,6 +1,6 @@
 {
   "name": "flachpack",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Transform some HTML files into a tiny website!",
   "main": "index.js",
   "scripts": {
