@@ -1,0 +1,22 @@
+{
+  "name": "flachpack",
+  "version": "0.0.0",
+  "description": "Transform some HTML files into a tiny website!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\""
+  },
+  "bin": {
+    "flachpack": "./index.js"
+  },
+  "keywords": [],
+  "author": "Daniel Diekmeier",
+  "repository": "github:danieldiekmeier/flachpack",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "fs-jetpack": "^1.3.0",
+    "html-minifier": "^3.5.15",
+    "minimist": "^1.2.0"
+  }
+}
