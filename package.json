@@ -1,6 +1,7 @@
 {
   "name": "flachpack",
-  "version": "0.2.1",
+  "version": "0.3.0",
+  "type": "module",
   "description": "Transform some HTML files into a tiny website!",
   "main": "index.js",
   "scripts": {
@@ -14,13 +15,14 @@
   "repository": "github:danieldiekmeier/flachpack",
   "license": "ISC",
   "dependencies": {
-    "browser-sync": "^2.26.7",
+    "browser-sync": "^2.29.1",
     "chokidar": "^3.3.1",
-    "ejs": "^3.0.2",
-    "fs-jetpack": "^2.2.3",
+    "ejs": "^3.1.9",
+    "fs-jetpack": "^5.1.0",
     "html-minifier": "^4.0.0",
-    "minimist": "^1.2.5",
-    "sass": "^1.26.3",
-    "terser": "^4.6.7"
+    "make-synchronous": "^1.0.0",
+    "minimist": "^1.2.8",
+    "sass": "^1.60.0",
+    "terser": "^5.16.8"
   }
 }
