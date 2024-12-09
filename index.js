@@ -4,23 +4,10 @@ import jetpack from 'fs-jetpack'
 import ejs from 'ejs'
 import path from 'path'
 import minimist from 'minimist'
-import { minify } from 'html-minifier'
-import makeSynchronous from 'make-synchronous'
+import { minify } from 'html-minifier-terser'
 import chokidar from 'chokidar'
 import BrowserSync from 'browser-sync'
-import Sass from 'sass'
-
-const terserMinify = makeSynchronous(async (code) => {
-  const minifyTerserAsync = await import('terser').then((m) => m.minify)
-
-  const result = await minifyTerserAsync(code, { warnings: true })
-  if (result.warnings) console.log(result.warnings)
-  if (result.error) {
-    console.log(code)
-    throw result.error
-  }
-  return result.code
-})
+import * as Sass from 'sass-embedded'
 
 const argv = minimist(process.argv.slice(2), {
   boolean: ['watch'],
@@ -58,34 +45,35 @@ if (argv.watch) {
   compile()
 }
 
-function includeSass(fileName) {
+async function includeSass(fileName) {
   const file = path.resolve(src, fileName)
-  return Sass.renderSync({ file }).css.toString()
+  return (await Sass.compileAsync(file)).css
 }
 
-function compile(browserSync) {
+async function compile(browserSync) {
   console.time(DONE_MESSAGE)
 
-  const files = jetpack
+  const files = await Promise.all(jetpack
     .find(src, { matching: '*.html', recursive: false })
     .map((fileName) => path.resolve(process.cwd(), fileName))
-    .map((fileName) => {
-      const content = ejs.render(
+    .map(async (fileName) => {
+      const content = await ejs.render(
         jetpack.read(fileName),
         {
           includeSass,
         },
         {
           filename: fileName,
+          async: true,
         }
       )
 
       return {
         fileName: fileName,
         distPath: path.resolve(dist, path.basename(fileName)),
-        content: minify(content, {
+        content: await minify(content, {
           minifyCSS: !argv.watch,
-          minifyJS: argv.watch ? false : terserMinify,
+          minifyJS: !argv.watch,
           removeAttributeQuotes: true,
           removeComments: true,
           removeScriptTypeAttributes: true,
@@ -93,7 +81,7 @@ function compile(browserSync) {
           conservativeCollapse: false,
         }),
       }
-    })
+    }))
 
   // Ensure empty output directory exists
   jetpack.dir(dist, { empty: true })
